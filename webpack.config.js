@@ -14,7 +14,12 @@ module.exports = {
         test: /\.s?css$/i,
 
         use: ["style-loader", "css-loader", "sass-loader"]
-      }
+      },
+      { test: /\.ts$/, use: "ts-loader" }
     ]
+  },
+
+  resolve: {
+    extensions: [".js", ".ts"]
   }
 };

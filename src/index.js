@@ -1,5 +1,6 @@
 import _ from "lodash";
 
+import { print } from "./print";
 import "./styles/style.css";
 import "./styles/style.scss";
 
@@ -18,5 +19,7 @@ function component() {
 
   return element;
 }
+
+print("webpack");
 
 document.body.appendChild(component());
