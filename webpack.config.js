@@ -7,7 +7,7 @@ const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const PROFILER = process.env.PROFILER === "true";
 const PRODUCTION = process.env.PRODUCTION === "true";
 
-const plugins = [new HtmlWebpackPlugin()];
+const plugins = [new HtmlWebpackPlugin({ template: "src/index.html" })];
 
 if (PROFILER) {
   plugins.push(
@@ -53,7 +53,11 @@ module.exports = {
           "sass-loader"
         ]
       },
-      { test: /\.ts$/, use: "ts-loader" },
+      {
+        test: /\.(js|ts|tsx?)$/,
+        loader: "babel-loader",
+        exclude: /node_modules/
+      },
       {
         test: /\.(png|svg|jpg|jpeg|gif)$/i,
         type: "asset/resource"
