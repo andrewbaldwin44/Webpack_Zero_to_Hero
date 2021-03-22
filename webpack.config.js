@@ -23,7 +23,7 @@ if (PROFILER) {
 if (PRODUCTION) {
   plugins.push(
     new MiniCssExtractPlugin({
-      filename: "[name].css"
+      filename: "[name].[contenthash].css"
     })
   );
 }
@@ -32,10 +32,10 @@ module.exports = {
   mode: PRODUCTION ? "production" : "development",
   devtool: PRODUCTION ? "source-map" : "eval-cheap-module-source-map",
 
-  entry: { index: "./src/index.js", another: "./src/another-module.js" },
+  entry: { index: "./src/index.js" },
 
   output: {
-    filename: "[name].bundle.js",
+    filename: "[name].[contenthash].js",
     path: path.resolve(__dirname, "dist"),
     clean: true
   },
@@ -68,8 +68,16 @@ module.exports = {
   plugins,
 
   optimization: {
+    moduleIds: "deterministic",
     splitChunks: {
-      chunks: "all"
+      chunks: "all",
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          chunks: "all"
+        }
+      }
     }
   },
 
