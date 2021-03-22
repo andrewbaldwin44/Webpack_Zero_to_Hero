@@ -1,6 +1,9 @@
 const path = require("path");
 
 module.exports = {
+  mode: "development",
+  devtool: "inline-source-map",
+
   entry: "./src/index.js",
 
   output: {
@@ -29,5 +32,10 @@ module.exports = {
 
   resolve: {
     extensions: [".js", ".ts"]
+  },
+
+  devServer: {
+    contentBase: "./dist",
+    port: "3000"
   }
 };
