@@ -6,8 +6,24 @@ const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 const PROFILER = process.env.PROFILER === "true";
 const PRODUCTION = process.env.PRODUCTION === "true";
+const SERVER_RENDER = process.env.SERVER_RENDER === "true";
 
-const plugins = [new HtmlWebpackPlugin({ template: "src/index.html" })];
+function getInterpolationString({ onServerRender, onDevRender }) {
+  if (SERVER_RENDER) {
+    return onServerRender;
+  }
+  return onDevRender;
+}
+
+const plugins = [
+  new HtmlWebpackPlugin({
+    template: "src/index.html",
+    html: getInterpolationString({
+      onServerRender: "<%- html %>",
+      onDevRender: ""
+    })
+  })
+];
 
 if (PROFILER) {
   plugins.push(
