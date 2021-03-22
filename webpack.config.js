@@ -1,12 +1,13 @@
 const path = require("path");
 
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 
 const PROFILER = process.env.PROFILER === "true";
 const PRODUCTION = process.env.PRODUCTION === "true";
 
-const plugins = [];
+const plugins = [new HtmlWebpackPlugin()];
 
 if (PROFILER) {
   plugins.push(
@@ -22,7 +23,7 @@ if (PROFILER) {
 if (PRODUCTION) {
   plugins.push(
     new MiniCssExtractPlugin({
-      filename: "styles.css"
+      filename: "[name].css"
     })
   );
 }
@@ -31,11 +32,12 @@ module.exports = {
   mode: PRODUCTION ? "production" : "development",
   devtool: PRODUCTION ? "source-map" : "eval-cheap-module-source-map",
 
-  entry: "./src/index.js",
+  entry: { index: "./src/index.js", another: "./src/another-module.js" },
 
   output: {
-    filename: "main.js",
-    path: path.resolve(__dirname, "dist")
+    filename: "[name].bundle.js",
+    path: path.resolve(__dirname, "dist"),
+    clean: true
   },
 
   module: {
@@ -64,6 +66,12 @@ module.exports = {
   },
 
   plugins,
+
+  optimization: {
+    splitChunks: {
+      chunks: "all"
+    }
+  },
 
   resolve: {
     extensions: [".js", ".ts"]
