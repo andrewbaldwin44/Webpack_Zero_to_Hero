@@ -1,8 +1,35 @@
 const path = require("path");
 
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+
+const PROFILER = process.env.PROFILER === "true";
+const PRODUCTION = process.env.PRODUCTION === "true";
+
+const plugins = [];
+
+if (PROFILER) {
+  plugins.push(
+    new BundleAnalyzerPlugin({
+      analyzerMode: "static",
+      openAnalyzer: true,
+      defaultSizes: "gzip",
+      reportFilename: path.join(__dirname, "profiler/report.html")
+    })
+  );
+}
+
+if (PRODUCTION) {
+  plugins.push(
+    new MiniCssExtractPlugin({
+      filename: "styles.css"
+    })
+  );
+}
+
 module.exports = {
-  mode: "development",
-  devtool: "inline-source-map",
+  mode: PRODUCTION ? "production" : "development",
+  devtool: PRODUCTION ? "source-map" : "eval-cheap-module-source-map",
 
   entry: "./src/index.js",
 
@@ -16,7 +43,13 @@ module.exports = {
       {
         test: /\.s?css$/i,
 
-        use: ["style-loader", "css-loader", "sass-loader"]
+        use: [
+          {
+            loader: PRODUCTION ? MiniCssExtractPlugin.loader : "style-loader"
+          },
+          "css-loader",
+          "sass-loader"
+        ]
       },
       { test: /\.ts$/, use: "ts-loader" },
       {
@@ -29,6 +62,8 @@ module.exports = {
       }
     ]
   },
+
+  plugins,
 
   resolve: {
     extensions: [".js", ".ts"]
