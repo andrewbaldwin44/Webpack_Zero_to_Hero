@@ -11,6 +11,7 @@ const port = 3000;
 
 app
   .set("views", path.join(process.cwd(), "dist"))
+  .use("/assets", Express.static(path.join(process.cwd(), "dist/assets")))
   .set("view engine", "ejs")
   .engine("html", renderFile)
   .get("*/", handleRender)

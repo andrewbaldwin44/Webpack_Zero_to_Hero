@@ -51,9 +51,10 @@ module.exports = {
   entry: { index: "./src/index.js" },
 
   output: {
-    filename: "[name].[contenthash].js",
+    filename: "assets/[name].[contenthash].js",
     path: path.resolve(__dirname, "dist"),
-    clean: true
+    clean: true,
+    publicPath: "/"
   },
 
   module: {
