@@ -1,5 +1,5 @@
 const path = require("path");
-
+const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
@@ -21,7 +21,14 @@ const plugins = [
     html: getInterpolationString({
       onServerRender: "<%- html %>",
       onDevRender: ""
+    }),
+    initialState: getInterpolationString({
+      onServerRender: "<%- initialState %>",
+      onDevRender: ""
     })
+  }),
+  new webpack.DefinePlugin({
+    "process.env.CLIENT": true
   })
 ];
 
